@@ -1,0 +1,147 @@
+const EntrenamientoBiblioteca = require("../models/EntrenamientoBiblioteca");
+
+const {
+  analizarPatronesEntrenador,
+} = require("../services/analizadorPatronesEntrenadorService");
+
+const {
+  clasificarEntrenamientoV2,
+} = require("../services/clasificadorEntrenamientoV2Service");
+
+const {
+  analizarEstructuraSemanal,
+} = require("../services/analizadorEstructuraSemanalService");
+
+const obtenerEntrenamientosBiblioteca = async (req, res) => {
+  try {
+    const { atletaId } = req.params;
+
+    const entrenamientos = await EntrenamientoBiblioteca.find({
+      atletaId,
+    }).sort({
+      fecha: -1,
+    });
+
+    res.json(entrenamientos);
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error obteniendo entrenamientos de biblioteca",
+      error: error.message,
+    });
+  }
+};
+
+const obtenerResumenBiblioteca = async (req, res) => {
+  try {
+    const { atletaId } = req.params;
+
+    const entrenamientos = await EntrenamientoBiblioteca.find({
+      atletaId,
+    });
+
+    const distribucion = {};
+
+    entrenamientos.forEach((entrenamiento) => {
+      const tipo = entrenamiento.objetivoFisiologico || "Sin clasificar";
+
+      distribucion[tipo] = (distribucion[tipo] || 0) + 1;
+    });
+
+    res.json({
+      total: entrenamientos.length,
+      distribucion,
+    });
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error obteniendo resumen de biblioteca",
+      error: error.message,
+    });
+  }
+};
+
+const reclasificarBiblioteca = async (req, res) => {
+  try {
+    const { atletaId } = req.params;
+
+    const entrenamientos = await EntrenamientoBiblioteca.find({
+      atletaId,
+    });
+
+    let actualizados = 0;
+    const distribucion = {};
+
+    for (const entrenamiento of entrenamientos) {
+      const resultado = clasificarEntrenamientoV2(entrenamiento);
+
+      entrenamiento.objetivoFisiologico = resultado.objetivoFisiologico;
+      entrenamiento.tipo = resultado.tipo;
+      entrenamiento.confianza = resultado.confianza;
+
+      await entrenamiento.save();
+
+      actualizados++;
+
+      const categoria = resultado.objetivoFisiologico || "Sin clasificar";
+
+      distribucion[categoria] = (distribucion[categoria] || 0) + 1;
+    }
+
+    res.json({
+      mensaje: "Biblioteca reclasificada correctamente",
+      total: entrenamientos.length,
+      actualizados,
+      distribucion,
+    });
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error reclasificando biblioteca",
+      error: error.message,
+    });
+  }
+};
+
+const obtenerPatronesEntrenador = async (req, res) => {
+  try {
+    const { atletaId } = req.params;
+
+    const resultado = await analizarPatronesEntrenador(atletaId);
+
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error analizando patrones del entrenador",
+      error: error.message,
+    });
+  }
+};
+
+const obtenerEstructuraSemanalBiblioteca = async (req, res) => {
+  try {
+    const { atletaId } = req.params;
+
+    const entrenamientos = await EntrenamientoBiblioteca.find({
+      atletaId,
+    }).sort({
+      fecha: 1,
+    });
+
+    const estructuraSemanal = analizarEstructuraSemanal(entrenamientos);
+
+    res.json(estructuraSemanal);
+  } catch (error) {
+    console.error("Error obteniendo estructura semanal:", error);
+
+    res.status(500).json({
+      mensaje: "Error obteniendo estructura semanal",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  obtenerEntrenamientosBiblioteca,
+  obtenerResumenBiblioteca,
+  reclasificarBiblioteca,
+  obtenerPatronesEntrenador,
+  obtenerEstructuraSemanalBiblioteca,
+};

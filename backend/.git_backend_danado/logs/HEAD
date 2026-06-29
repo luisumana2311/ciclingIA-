@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 4787f40938571ebea3fc343df3b0086b64b8b392 Mariano Umana <mymuplift@gmail.com> 1780381241 -0600	commit (initial): motor v0.2 funcionando
+4787f40938571ebea3fc343df3b0086b64b8b392 0000000000000000000000000000000000000000 Mariano Umana <mymuplift@gmail.com> 1780381310 -0600	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 4787f40938571ebea3fc343df3b0086b64b8b392 Mariano Umana <mymuplift@gmail.com> 1780381310 -0600	Branch: renamed refs/heads/master to refs/heads/main
+4787f40938571ebea3fc343df3b0086b64b8b392 b3aae6a9c0d38b6a8df48a39eead00b0e761075f Mariano Umana <mymuplift@gmail.com> 1780382808 -0600	commit: motor actualizado
+b3aae6a9c0d38b6a8df48a39eead00b0e761075f 45ca9efb9946da7d2933f8bde8c4ef9e22bdd048 Mariano Umana <mymuplift@gmail.com> 1780472237 -0600	commit: feat: agregar HistorialSemanal v1 y persistencia automática de semanas
+45ca9efb9946da7d2933f8bde8c4ef9e22bdd048 45ca9efb9946da7d2933f8bde8c4ef9e22bdd048 Mariano Umana <mymuplift@gmail.com> 1780472264 -0600	checkout: moving from main to feature/perfil-dinamico-v2
+45ca9efb9946da7d2933f8bde8c4ef9e22bdd048 faa21a1de208ab7fc69b4d36f7d63d439ab16b78 Mariano Umana <mymuplift@gmail.com> 1780473598 -0600	commit: feat: agregar Perfil Dinamico v2 con tendencias y preferencias
